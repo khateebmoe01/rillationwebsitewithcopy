@@ -1,0 +1,265 @@
+/* ============================================
+   APP-SPECIFIC STYLES & UTILITIES - LIGHT THEME
+   ============================================ */
+
+/* Smooth text rendering */
+* {
+  text-rendering: optimizeLegibility;
+}
+
+/* Selection styling */
+::selection {
+  background: rgba(12, 36, 233, 0.2);
+  color: #222624;
+}
+
+/* Logo container refinements */
+.logo-container {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.logo-container:hover {
+  transform: scale(1.02);
+}
+
+.logo-container img {
+  min-width: clamp(120px, 15vw, 160px);
+  max-width: clamp(140px, 18vw, 180px);
+  height: auto;
+  filter: brightness(0) saturate(100%) invert(15%) sepia(95%) saturate(5000%) hue-rotate(230deg) brightness(0.9) contrast(1.2);
+}
+
+/* Hero title special effects */
+.hero-title {
+  position: relative;
+}
+
+/* Button focus states */
+.hero-cta:focus,
+.nav-cta:focus,
+.calendly-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(12, 36, 233, 0.3);
+}
+
+/* Card shine effect on hover */
+.stat-card,
+.bento-card,
+.pain-card,
+.outcome-card {
+  position: relative;
+}
+
+.stat-card::after,
+.bento-card::after,
+.outcome-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(12, 36, 233, 0.03),
+    transparent
+  );
+  transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.stat-card:hover::after,
+.bento-card:hover::after,
+.outcome-card:hover::after {
+  left: 100%;
+}
+
+/* Glow effect for blue elements */
+.highlight,
+.highlight-blue {
+  color: var(--color-blue);
+  font-weight: 500;
+}
+
+/* Stat card number styling */
+.stat-value {
+  color: var(--color-carbon);
+}
+
+/* Enhanced marquee styling */
+.marquee-section {
+  position: relative;
+}
+
+.marquee-section::before,
+.marquee-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.marquee-section::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--color-surface), transparent);
+}
+
+.marquee-section::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--color-surface), transparent);
+}
+
+/* Pillar card line connector */
+.pillar-card::before {
+  content: '';
+  position: absolute;
+  left: clamp(40px, 6vw, 60px);
+  top: clamp(80px, 12vw, 120px);
+  bottom: -48px;
+  width: 1px;
+  background: var(--color-border);
+}
+
+.pillar-card:last-child::before {
+  display: none;
+}
+
+/* Custom scrollbar - Light theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-platinum);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(34, 38, 36, 0.3);
+}
+
+/* Pulse animation for live indicators */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.7;
+  }
+}
+
+.hero-badge .dot {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Gradient text animation for italic highlight */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.hero-title .italic {
+  background: linear-gradient(
+    135deg,
+    #0C24E9 0%,
+    #2040F0 25%,
+    #0C24E9 50%,
+    #2040F0 75%,
+    #0C24E9 100%
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 4s ease infinite;
+}
+
+/* Section divider lines */
+.section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: clamp(20px, 5vw, 48px);
+  right: clamp(20px, 5vw, 48px);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-border),
+    transparent
+  );
+}
+
+.who-we-are::before,
+.more-than-vendor::before {
+  display: none;
+}
+
+/* Calendly section gradient overlay */
+.calendly-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at 50% 0%, rgba(12, 36, 233, 0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Accessibility - reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .marquee-track {
+    animation: none;
+  }
+  
+  .hero-title .italic {
+    animation: none;
+    color: #0C24E9;
+    background: none;
+    -webkit-text-fill-color: #0C24E9;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .marquee-section::before,
+  .marquee-section::after {
+    width: 50px;
+  }
+}
+
+@media (max-width: 600px) {
+  .section::before {
+    left: 20px;
+    right: 20px;
+  }
+  
+  .pillar-card::before {
+    display: none;
+  }
+}

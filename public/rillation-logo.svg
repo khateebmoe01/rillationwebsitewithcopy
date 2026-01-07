@@ -1,0 +1,17 @@
+<svg width="500" height="120" viewBox="0 0 500 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- RR Monogram (Left Side) -->
+  <g transform="translate(0, 10)">
+    <!-- First R -->
+    <rect x="0" y="0" width="20" height="100" fill="#0C24E9"/>
+    <path d="M0 55C0 77.0914 17.9086 95 40 95H20V55H0Z" fill="#0C24E9"/>
+    
+    <!-- Second R -->
+    <path d="M30 0H55C73.2254 0 88 14.7746 88 33C88 51.2254 73.2254 66 55 66H30V0Z" fill="#0C24E9"/>
+    <rect x="30" y="66" width="20" height="34" fill="#0C24E9"/>
+    <path d="M50 66C50 84.7777 65.2223 100 84 100H50V66Z" fill="#0C24E9"/>
+  </g>
+  
+  <!-- Rillation Revenue Text (Right Side) -->
+  <text x="120" y="55" font-family="Arial, Helvetica, sans-serif" font-size="50" font-weight="700" fill="#0C24E9" letter-spacing="-0.02em">Rillation</text>
+  <text x="120" y="100" font-family="Arial, Helvetica, sans-serif" font-size="50" font-weight="700" fill="#0C24E9" letter-spacing="-0.02em">Revenue</text>
+</svg>
