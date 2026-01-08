@@ -1,0 +1,74 @@
+.floating-dots-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 300px;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.floating-dots-left {
+  left: 0;
+  mask-image: linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 60%, transparent 100%);
+}
+
+.floating-dots-right {
+  right: 0;
+  mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 60%, transparent 100%);
+}
+
+.floating-dot {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--size);
+  height: var(--size);
+  background-color: #2D7A5E; /* Teal/Green - matches reference */
+  border-radius: 50%;
+  opacity: var(--opacity);
+  animation: floatUp var(--duration) linear infinite;
+  animation-delay: calc(var(--delay) * -1); /* Negative delay starts animation mid-way */
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0);
+    opacity: var(--opacity);
+  }
+  50% {
+    opacity: calc(var(--opacity) * 1.2);
+  }
+  100% {
+    transform: translateY(-120vh);
+    opacity: 0;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .floating-dots-container {
+    width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .floating-dots-container {
+    width: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .floating-dots-container {
+    width: 100px;
+  }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .floating-dot {
+    animation: none;
+  }
+}

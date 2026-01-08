@@ -1,16 +1,62 @@
-# React + Vite
+# Rillation Revenue Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive website for Rillation Revenue built with React and Vite.
 
-Currently, two official plugins are available:
+## 🚀 Quick Start
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Development
+```bash
+npm install
+npm run dev
+```
 
-## React Compiler
+### Build
+```bash
+npm run build
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Preview Production Build
+```bash
+npm run preview
+```
 
-## Expanding the ESLint configuration
+## 📦 Deployment
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The project is ready to deploy to various hosting platforms:
+
+### Vercel (Recommended)
+1. Push your code to GitHub
+2. Import your repository on [Vercel](https://vercel.com)
+3. Vercel will automatically detect the Vite configuration
+4. Deploy!
+
+### Netlify
+1. Push your code to GitHub
+2. Import your repository on [Netlify](https://netlify.com)
+3. Netlify will use the `netlify.toml` configuration
+4. Deploy!
+
+### Manual Deployment
+1. Run `npm run build`
+2. Upload the `dist` folder to your hosting provider
+3. Configure your server to serve `index.html` for all routes (SPA routing)
+
+## 🎨 Typography
+
+The project uses custom fonts:
+- **Headline**: Cooper BT
+- **Subheadline**: Asket-Light
+- **Paragraph**: Univers Pro 53 Extended
+
+Make sure to include the font files in your project or configure a font service.
+
+## 📁 Project Structure
+
+```
+├── public/          # Static assets
+├── src/
+│   ├── components/  # React components
+│   ├── App.jsx      # Main app component
+│   └── index.css    # Global styles
+└── dist/            # Production build (generated)
+```

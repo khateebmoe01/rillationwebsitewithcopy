@@ -23,8 +23,8 @@
 }
 
 .logo-container img {
-  min-width: clamp(120px, 15vw, 160px);
-  max-width: clamp(140px, 18vw, 180px);
+  min-width: clamp(100px, 12vw, 140px);
+  max-width: clamp(120px, 14vw, 160px);
   height: auto;
   filter: brightness(0) saturate(100%) invert(15%) sepia(95%) saturate(5000%) hue-rotate(230deg) brightness(0.9) contrast(1.2);
 }
@@ -76,16 +76,16 @@
   left: 100%;
 }
 
-/* Glow effect for blue elements */
+/* Glow effect for primary elements */
 .highlight,
 .highlight-blue {
-  color: var(--color-blue);
+  color: var(--color-primary);
   font-weight: 500;
 }
 
 /* Stat card number styling */
 .stat-value {
-  color: var(--color-carbon);
+  color: var(--color-primary);
 }
 
 /* Enhanced marquee styling */
@@ -192,24 +192,8 @@
   animation: gradientShift 4s ease infinite;
 }
 
-/* Section divider lines */
+/* Section divider lines - now handled by border-top on sections */
 .section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: clamp(20px, 5vw, 48px);
-  right: clamp(20px, 5vw, 48px);
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--color-border),
-    transparent
-  );
-}
-
-.who-we-are::before,
-.more-than-vendor::before {
   display: none;
 }
 
