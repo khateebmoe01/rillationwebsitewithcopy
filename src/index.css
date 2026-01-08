@@ -848,11 +848,11 @@ body {
   flex-shrink: 0;
 }
 
-/* Slim divider line for partners section */
+/* Slim divider line for partners section - positioned below title */
 .official-partners-section::before {
   content: '';
   position: absolute;
-  top: 0;
+  top: clamp(28px, 3.5vw, 48px);
   left: clamp(24px, 4vw, 64px);
   right: clamp(24px, 4vw, 64px);
   height: 1px;
@@ -871,8 +871,10 @@ body {
   font-weight: 400;
   color: var(--color-carbon);
   margin-bottom: clamp(8px, 1vw, 12px);
-  margin-top: clamp(-20px, -2vw, -12px);
+  margin-top: 0;
   letter-spacing: 0.02em;
+  position: relative;
+  z-index: 1;
 }
 
 .partners-grid {
@@ -920,7 +922,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--color-primary);
+  border: none;
   border-radius: 4px;
   padding: 6px;
 }
@@ -1577,7 +1579,7 @@ body {
   height: 100%;
   max-height: 800px;
   pointer-events: none;
-  z-index: 1;
+  z-index: 0;
 }
 
 .booking-ring {
@@ -1620,9 +1622,9 @@ body {
   position: absolute;
   border-radius: 50%;
   background: var(--color-primary);
-  opacity: 0.3;
+  opacity: 0.2;
   pointer-events: none;
-  z-index: 2;
+  z-index: 0;
   will-change: transform;
 }
 
@@ -1643,8 +1645,8 @@ body {
   height: 200px;
   border-radius: 50%;
   background: radial-gradient(circle, var(--color-primary), transparent);
-  opacity: 0.2;
-  filter: blur(20px);
+  opacity: 0.15;
+  filter: blur(25px);
   pointer-events: none;
   z-index: -1;
 }
@@ -1714,8 +1716,27 @@ body {
 .booking-text {
   text-align: center;
   max-width: 700px;
-  z-index: 5;
+  z-index: 20;
   position: relative;
+}
+
+/* Calendly Widget */
+.booking-calendly-wrapper {
+  position: relative;
+  z-index: 15;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(12, 36, 233, 0.15);
+  background: var(--color-bg);
+}
+
+.booking-calendly-wrapper .calendly-inline-widget {
+  border-radius: 16px;
+  min-height: 700px;
+  background: var(--color-bg);
 }
 
 .booking-headline {
@@ -1772,8 +1793,17 @@ body {
     height: 120px;
   }
 
-  .particles {
+  .booking-particle {
     display: none; /* Hide particles on mobile for performance */
+  }
+
+  .booking-calendly-wrapper {
+    max-width: 100%;
+    margin: 0 16px;
+  }
+
+  .booking-calendly-wrapper .calendly-inline-widget {
+    min-height: 600px;
   }
 }
 

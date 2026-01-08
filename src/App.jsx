@@ -425,6 +425,7 @@ const WhoWeAreSection = () => {
   return (
     <motion.section
       ref={ref}
+      id="about"
       className="section who-we-are"
       initial={{ opacity: 0 }}
       animate={isInView ? { opacity: 1 } : {}}
@@ -1291,23 +1292,31 @@ const RealmDoorSection = () => {
   const containerRef = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const [isHovered, setIsHovered] = useState(false);
+  const [showCalendly, setShowCalendly] = useState(false);
 
-  // Generate floating particles/elements
+  // Load Calendly script
+  useEffect(() => {
+    if (showCalendly && !document.querySelector('script[src*="calendly.com"]')) {
+      const script = document.createElement('script');
+      script.src = 'https://assets.calendly.com/assets/external/widget.js';
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  }, [showCalendly]);
+
+  // Generate floating particles/elements - positioned away from text area
   const particles = Array.from({ length: 12 }, (_, i) => ({
     id: i,
     size: Math.random() * 8 + 4,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
+    x: Math.random() * 80 + 10, // Keep away from center
+    y: Math.random() * 60 + 20, // Keep away from text area
     delay: Math.random() * 2,
     duration: Math.random() * 3 + 2,
   }));
 
   const handleClick = (e) => {
     e.preventDefault();
-    const calendlySection = document.getElementById('calendly');
-    if (calendlySection) {
-      calendlySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    setShowCalendly(true);
   };
 
   return (
@@ -1324,25 +1333,25 @@ const RealmDoorSection = () => {
         <motion.div 
           className="booking-background"
           initial={{ scale: 0.8, opacity: 0 }}
-          animate={isInView ? { scale: 1, opacity: 1 } : {}}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          animate={isInView && !showCalendly ? { scale: 1, opacity: 1 } : { scale: 0.9, opacity: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
           {/* Large outer ring */}
           <motion.div
             className="booking-ring booking-ring-1"
-            animate={isInView ? { rotate: 360 } : { rotate: 0 }}
+            animate={isInView && !showCalendly ? { rotate: 360 } : { rotate: 0 }}
             transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
             style={{ scale: isHovered ? 1.1 : 1 }}
           />
           <motion.div
             className="booking-ring booking-ring-2"
-            animate={isInView ? { rotate: -360 } : { rotate: 0 }}
+            animate={isInView && !showCalendly ? { rotate: -360 } : { rotate: 0 }}
             transition={{ duration: 35, repeat: Infinity, ease: 'linear' }}
             style={{ scale: isHovered ? 1.15 : 1 }}
           />
           <motion.div
             className="booking-ring booking-ring-3"
-            animate={isInView ? { rotate: 360 } : { rotate: 0 }}
+            animate={isInView && !showCalendly ? { rotate: 360 } : { rotate: 0 }}
             transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
             style={{ scale: isHovered ? 1.2 : 1 }}
           />
@@ -1359,12 +1368,12 @@ const RealmDoorSection = () => {
               width: particle.size,
               height: particle.size,
             }}
-            animate={isInView ? {
+            animate={isInView && !showCalendly ? {
               y: [0, -30, 0],
               x: [0, Math.random() * 40 - 20, 0],
-              opacity: [0.3, 0.6, 0.3],
+              opacity: [0.2, 0.4, 0.2],
               scale: [1, 1.2, 1],
-            } : {}}
+            } : { opacity: 0 }}
             transition={{
               duration: particle.duration,
               delay: particle.delay,
@@ -1380,8 +1389,10 @@ const RealmDoorSection = () => {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onClick={handleClick}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={!showCalendly ? { scale: 1.05 } : {}}
+          whileTap={!showCalendly ? { scale: 0.95 } : {}}
+          animate={showCalendly ? { opacity: 0, scale: 0.9, y: -30 } : { opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
           {/* Glow effect */}
           <motion.div
@@ -1430,7 +1441,7 @@ const RealmDoorSection = () => {
               style={{
                 '--rotation': `${i * 120}deg`,
               }}
-              animate={isInView ? { rotate: 360 } : { rotate: 0 }}
+              animate={isInView && !showCalendly ? { rotate: 360, opacity: 1 } : { rotate: 0, opacity: 0 }}
               transition={{
                 duration: 15 + i * 3,
                 repeat: Infinity,
@@ -1439,7 +1450,7 @@ const RealmDoorSection = () => {
             >
               <motion.div
                 className="booking-orbit-dot"
-                animate={isHovered ? { scale: [1, 1.3, 1] } : { scale: 1 }}
+                animate={isHovered && !showCalendly ? { scale: [1, 1.3, 1] } : { scale: 1 }}
                 transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
               />
             </motion.div>
@@ -1450,23 +1461,38 @@ const RealmDoorSection = () => {
         <motion.div
           className="booking-text"
           initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          animate={isInView && !showCalendly ? { opacity: 1, y: 0 } : showCalendly ? { opacity: 0, y: -20 } : {}}
           transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
         >
           <motion.h2
             className="booking-headline"
-            animate={isHovered ? { scale: 1.02 } : { scale: 1 }}
+            animate={isHovered && !showCalendly ? { scale: 1.02 } : { scale: 1 }}
             transition={{ duration: 0.3 }}
           >
             Ready to scale?
           </motion.h2>
           <motion.p
             className="booking-subtitle"
-            animate={isHovered ? { opacity: 0.8 } : { opacity: 1 }}
+            animate={isHovered && !showCalendly ? { opacity: 0.8 } : { opacity: 1 }}
             transition={{ duration: 0.3 }}
           >
             Let's have a quick chat about how we can help you generate 10+ ready-to-close sales opportunities per week.
           </motion.p>
+        </motion.div>
+
+        {/* Calendly Widget - appears with animation */}
+        <motion.div
+          className="booking-calendly-wrapper"
+          initial={{ opacity: 0, scale: 0.8, y: 50 }}
+          animate={showCalendly ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.8, y: 50 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          style={{ display: showCalendly ? 'block' : 'none' }}
+        >
+          <div 
+            className="calendly-inline-widget" 
+            data-url="https://calendly.com/ziad_khateeb/rillation-intro-call?hide_gdpr_banner=1&background_color=f5f2e8&text_color=222624&primary_color=0c24e9"
+            style={{ minWidth: '320px', height: '700px', width: '100%' }}
+          />
         </motion.div>
       </div>
     </motion.section>
@@ -1539,7 +1565,20 @@ function App() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + i * 0.1, duration: 0.6 }}
               >
-                <a href={`#${item.toLowerCase()}`}>{item}</a>
+                <a 
+                  href={`#${item.toLowerCase()}`}
+                  onClick={(e) => {
+                    if (item === 'About') {
+                      e.preventDefault();
+                      const aboutSection = document.getElementById('about');
+                      if (aboutSection) {
+                        aboutSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }
+                  }}
+                >
+                  {item}
+                </a>
               </motion.li>
             ))}
           </ul>
