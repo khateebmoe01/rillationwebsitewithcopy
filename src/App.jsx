@@ -365,26 +365,14 @@ const OfficialPartnersSection = () => {
             key={partner.name}
             className="partner-card"
             variants={cardVariants}
-            whileHover={{ 
-              y: -12, 
-              scale: 1.08,
-              rotate: 2,
-              transition: { type: 'spring', stiffness: 400, damping: 15 }
-            }}
-            whileTap={{ scale: 0.92 }}
-            style={{ transformStyle: 'preserve-3d' }}
           >
-            <motion.div 
-              className="partner-logo-wrapper"
-              whileHover={{ rotateY: 5, rotateX: -5 }}
-              transition={{ type: 'spring', stiffness: 300 }}
-            >
+            <div className="partner-logo-wrapper">
               <img 
                 src={partner.logo} 
                 alt={partner.name} 
                 className={`partner-logo ${partner.name === 'Make' ? 'partner-logo-make' : ''}`}
               />
-            </motion.div>
+            </div>
           </motion.div>
         ))}
       </motion.div>
@@ -1297,161 +1285,188 @@ const HowWinnersSection = () => {
   );
 };
 
-// Realm Door Section - Inspired by abstract illustration
+// Magnetic Booking Section - Creative and practical booking interface
 const RealmDoorSection = () => {
   const ref = useRef(null);
+  const containerRef = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Generate floating particles/elements
+  const particles = Array.from({ length: 12 }, (_, i) => ({
+    id: i,
+    size: Math.random() * 8 + 4,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    delay: Math.random() * 2,
+    duration: Math.random() * 3 + 2,
+  }));
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    const calendlySection = document.getElementById('calendly');
+    if (calendlySection) {
+      calendlySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   return (
     <motion.section
       ref={ref}
       id="calendly"
-      className="realm-door-section"
+      className="booking-section"
       initial={{ opacity: 0 }}
       animate={isInView ? { opacity: 1 } : {}}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
     >
-      <div className="realm-door-content">
-        {/* Abstract Illustration */}
+      <div className="booking-container" ref={containerRef}>
+        {/* Background gradient circles - creating depth */}
         <motion.div 
-          className="realm-illustration"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={isInView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          className="booking-background"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={isInView ? { scale: 1, opacity: 1 } : {}}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         >
-          <svg 
-            viewBox="0 0 1200 600" 
-            className="realm-svg"
-            preserveAspectRatio="xMidYMid meet"
-          >
-            <defs>
-              {/* Sky gradient */}
-              <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#4A90E2" stopOpacity="0.8" />
-                <stop offset="50%" stopColor="#FF6B9D" stopOpacity="0.6" />
-                <stop offset="100%" stopColor="#FF8C42" stopOpacity="0.7" />
-              </linearGradient>
-              
-              {/* Ground gradient */}
-              <linearGradient id="groundGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#2E5C8A" stopOpacity="0.5" />
-                <stop offset="100%" stopColor="#C94A6B" stopOpacity="0.6" />
-              </linearGradient>
-              
-              {/* Doorway glow */}
-              <radialGradient id="doorGlow" cx="50%" cy="50%">
-                <stop offset="0%" stopColor="#FFF9E6" stopOpacity="1" />
-                <stop offset="50%" stopColor="#FFE5B4" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#FFB347" stopOpacity="0.3" />
-              </radialGradient>
-              
-              {/* Pillar gradient */}
-              <linearGradient id="pillarGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#4A90E2" stopOpacity="0.6" />
-                <stop offset="50%" stopColor="#2E5C8A" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#C94A6B" stopOpacity="0.5" />
-              </linearGradient>
-            </defs>
-            
-            {/* Sky background */}
-            <rect width="1200" height="400" fill="url(#skyGradient)" />
-            
-            {/* Ground */}
-            <rect y="400" width="1200" height="200" fill="url(#groundGradient)" />
-            
-            {/* Pillars - receding into distance */}
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map((i) => {
-              const x = 100 + i * 70;
-              const width = 40 - i * 1.5;
-              const height = 300 + i * 20;
-              const y = 400 - height;
-              const opacity = 0.3 + (i / 15) * 0.4;
-              
-              return (
-                <rect
-                  key={i}
-                  x={x}
-                  y={y}
-                  width={width}
-                  height={height}
-                  fill="url(#pillarGradient)"
-                  opacity={opacity}
-                />
-              );
-            })}
-            
-            {/* Glowing doorway */}
-            <rect
-              x="550"
-              y="200"
-              width="100"
-              height="250"
-              fill="url(#doorGlow)"
-              opacity="0.9"
-            />
-            <rect
-              x="560"
-              y="210"
-              width="80"
-              height="230"
-              fill="#FFE5B4"
-              opacity="0.6"
-            />
-            
-            {/* Silhouetted figure */}
-            <motion.path
-              d="M 580 450 L 600 380 L 620 450 Z"
-              fill="#222624"
-              opacity="0.8"
-              initial={{ y: 0 }}
-              animate={isInView ? { y: [0, -5, 0] } : {}}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <ellipse
-              cx="600"
-              cy="370"
-              rx="15"
-              ry="20"
-              fill="#222624"
-              opacity="0.8"
-            />
-          </svg>
+          {/* Large outer ring */}
+          <motion.div
+            className="booking-ring booking-ring-1"
+            animate={isInView ? { rotate: 360 } : { rotate: 0 }}
+            transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
+            style={{ scale: isHovered ? 1.1 : 1 }}
+          />
+          <motion.div
+            className="booking-ring booking-ring-2"
+            animate={isInView ? { rotate: -360 } : { rotate: 0 }}
+            transition={{ duration: 35, repeat: Infinity, ease: 'linear' }}
+            style={{ scale: isHovered ? 1.15 : 1 }}
+          />
+          <motion.div
+            className="booking-ring booking-ring-3"
+            animate={isInView ? { rotate: 360 } : { rotate: 0 }}
+            transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+            style={{ scale: isHovered ? 1.2 : 1 }}
+          />
         </motion.div>
-        
-        {/* Text and Grid Overlay */}
-        <motion.div 
-          className="realm-overlay"
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+
+        {/* Floating particles */}
+        {particles.map((particle) => (
+          <motion.div
+            key={particle.id}
+            className="booking-particle"
+            style={{
+              left: `${particle.x}%`,
+              top: `${particle.y}%`,
+              width: particle.size,
+              height: particle.size,
+            }}
+            animate={isInView ? {
+              y: [0, -30, 0],
+              x: [0, Math.random() * 40 - 20, 0],
+              opacity: [0.3, 0.6, 0.3],
+              scale: [1, 1.2, 1],
+            } : {}}
+            transition={{
+              duration: particle.duration,
+              delay: particle.delay,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          />
+        ))}
+
+        {/* Central booking button - magnetic effect */}
+        <motion.div
+          className="booking-button-wrapper"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          onClick={handleClick}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
-          {/* Text */}
-          <motion.h2 
-            className="realm-text"
-            initial={{ opacity: 0, x: -20 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          {/* Glow effect */}
+          <motion.div
+            className="booking-glow"
+            animate={{
+              scale: isHovered ? [1, 1.2, 1] : [1, 1.1, 1],
+              opacity: isHovered ? [0.4, 0.6, 0.4] : [0.2, 0.3, 0.2],
+            }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+
+          {/* Main button */}
+          <motion.button
+            className="booking-button"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={isInView ? { scale: 1, opacity: 1 } : {}}
+            transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           >
-            Enter the door of realm and<br />
-            build anything you imagine.
+            <motion.span
+              className="booking-button-text"
+              animate={isHovered ? { x: [0, 3, 0] } : {}}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              Book Your Call
+            </motion.span>
+            <motion.svg
+              className="booking-arrow"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              animate={isHovered ? { x: [0, 5, 0] } : { x: 0 }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </motion.svg>
+          </motion.button>
+
+          {/* Orbiting elements */}
+          {[0, 1, 2].map((i) => (
+            <motion.div
+              key={i}
+              className="booking-orbit"
+              style={{
+                '--rotation': `${i * 120}deg`,
+              }}
+              animate={isInView ? { rotate: 360 } : { rotate: 0 }}
+              transition={{
+                duration: 15 + i * 3,
+                repeat: Infinity,
+                ease: 'linear',
+              }}
+            >
+              <motion.div
+                className="booking-orbit-dot"
+                animate={isHovered ? { scale: [1, 1.3, 1] } : { scale: 1 }}
+                transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
+              />
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Supporting text */}
+        <motion.div
+          className="booking-text"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <motion.h2
+            className="booking-headline"
+            animate={isHovered ? { scale: 1.02 } : { scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            Ready to scale?
           </motion.h2>
-          
-          {/* Grid Pattern */}
-          <motion.div 
-            className="realm-grid"
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            transition={{ duration: 1, delay: 0.8 }}
+          <motion.p
+            className="booking-subtitle"
+            animate={isHovered ? { opacity: 0.8 } : { opacity: 1 }}
+            transition={{ duration: 0.3 }}
           >
-            <svg width="400" height="300" className="grid-svg">
-              <defs>
-                <pattern id="gridPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                  <circle cx="10" cy="10" r="1.5" fill="#222624" opacity="0.3" />
-                </pattern>
-              </defs>
-              <rect width="400" height="300" fill="url(#gridPattern)" />
-            </svg>
-          </motion.div>
+            Let's have a quick chat about how we can help you generate 10+ ready-to-close sales opportunities per week.
+          </motion.p>
         </motion.div>
       </div>
     </motion.section>
