@@ -76,16 +76,30 @@ const MagneticButton = ({ children, className, onClick, href, ...props }) => {
   };
 
   if (href) {
+    const handleClick = (e) => {
+      if (href.startsWith('#')) {
+        e.preventDefault();
+        const element = document.querySelector(href);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+      if (onClick) {
+        onClick(e);
+      }
+    };
+
     return (
       <motion.a
         ref={ref}
         href={href}
-        target="_blank"
-        rel="noopener noreferrer"
+        target={href.startsWith('#') ? undefined : '_blank'}
+        rel={href.startsWith('#') ? undefined : 'noopener noreferrer'}
         className={className}
         style={{ x: springX, y: springY }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
+        onClick={handleClick}
         {...props}
       >
         {children}
@@ -777,6 +791,7 @@ const CalendlySection = () => {
   return (
     <motion.section
       ref={ref}
+      id="calendly"
       className="calendly-section"
       initial={{ opacity: 0 }}
       animate={isInView ? { opacity: 1 } : {}}
@@ -891,15 +906,17 @@ function App() {
             ))}
           </ul>
           <motion.a
-            href="https://calendly.com/ziad_khateeb/rillation-intro-call"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#calendly"
             className="nav-cta"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.7, duration: 0.5 }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            onClick={(e) => {
+              e.preventDefault();
+              document.getElementById('calendly')?.scrollIntoView({ behavior: 'smooth' });
+            }}
           >
             Launch Your Pilot Campaign
           </motion.a>
@@ -938,9 +955,9 @@ function App() {
           >
             <MagneticButton 
               className="hero-cta"
-              href="https://calendly.com/ziad_khateeb/rillation-intro-call"
+              href="#calendly"
             >
-              <span>Accepting New Partners for 2026</span>
+              <span className="hero-cta-text">Accepting New Partners for 2026</span>
               <svg className="arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>

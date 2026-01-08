@@ -26,6 +26,7 @@
 .logo-container img {
   height: 40px;
   width: auto;
+  filter: brightness(0) saturate(100%) invert(9%) sepia(95%) saturate(7158%) hue-rotate(234deg) brightness(96%) contrast(143%);
 }
 
 /* Hero title special effects */
