@@ -5,6 +5,176 @@ import FloatingDots from './components/FloatingDots';
 import NetworkBackground from './components/NetworkBackground';
 import './App.css';
 
+// ============================================
+// REUSABLE ANIMATION VARIANTS
+// ============================================
+
+// Fade in + slide up animation
+const fadeInUp = {
+  hidden: { 
+    opacity: 0, 
+    y: 40 
+  },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { 
+      duration: 0.8, 
+      ease: [0.16, 1, 0.3, 1] 
+    }
+  }
+};
+
+// Fade in + scale animation
+const fadeInScale = {
+  hidden: { 
+    opacity: 0, 
+    scale: 0.9 
+  },
+  visible: { 
+    opacity: 1, 
+    scale: 1,
+    transition: { 
+      duration: 0.6, 
+      ease: [0.16, 1, 0.3, 1] 
+    }
+  }
+};
+
+// Slide in from left
+const slideInLeft = {
+  hidden: { 
+    opacity: 0, 
+    x: -60 
+  },
+  visible: { 
+    opacity: 1, 
+    x: 0,
+    transition: { 
+      duration: 0.8, 
+      ease: [0.16, 1, 0.3, 1] 
+    }
+  }
+};
+
+// Slide in from right
+const slideInRight = {
+  hidden: { 
+    opacity: 0, 
+    x: 60 
+  },
+  visible: { 
+    opacity: 1, 
+    x: 0,
+    transition: { 
+      duration: 0.8, 
+      ease: [0.16, 1, 0.3, 1] 
+    }
+  }
+};
+
+// Stagger container for children animations
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.1
+    }
+  }
+};
+
+// Stagger container with faster stagger
+const staggerContainerFast = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.06,
+      delayChildren: 0.05
+    }
+  }
+};
+
+// Scale + rotate animation for cards
+const scaleRotate = {
+  hidden: { 
+    opacity: 0, 
+    scale: 0.8,
+    rotate: -5
+  },
+  visible: { 
+    opacity: 1, 
+    scale: 1,
+    rotate: 0,
+    transition: { 
+      type: 'spring',
+      stiffness: 100,
+      damping: 15
+    }
+  }
+};
+
+// Bounce in animation
+const bounceIn = {
+  hidden: { 
+    opacity: 0, 
+    scale: 0.3 
+  },
+  visible: { 
+    opacity: 1, 
+    scale: 1,
+    transition: { 
+      type: 'spring',
+      stiffness: 300,
+      damping: 20
+    }
+  }
+};
+
+// Slide up with fade
+const slideUpFade = {
+  hidden: { 
+    opacity: 0, 
+    y: 80 
+  },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { 
+      duration: 1, 
+      ease: [0.16, 1, 0.3, 1] 
+    }
+  }
+};
+
+// ============================================
+// ANIMATED COMPONENTS
+// ============================================
+
+// Parallax Section Wrapper
+const ParallaxSection = ({ children, className = '', offset = 50 }) => {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start']
+  });
+  
+  const y = useTransform(scrollYProgress, [0, 1], [offset, -offset]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8]);
+
+  return (
+    <motion.div 
+      ref={ref} 
+      className={`section-wrapper ${className}`}
+      style={{ y, opacity }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
 // Animated Counter with spring animation
 const AnimatedCounter = ({ value, suffix = '', duration = 2.5 }) => {
   const ref = useRef(null);
@@ -122,50 +292,6 @@ const MagneticButton = ({ children, className, onClick, href, ...props }) => {
   );
 };
 
-// Trusted By Section - Marquee
-const TrustedBySection = () => {
-  const companies = [
-    'Company A',
-    'Company B', 
-    'Company C',
-    'Company D',
-    'Company E',
-    'Company F',
-    'Company G',
-    'Company H',
-  ];
-
-  // Triple the items for seamless loop
-  const allCompanies = [...companies, ...companies, ...companies];
-
-  return (
-    <section className="trusted-by-section">
-      <p className="trusted-by-heading">
-        TRUSTED BY VC BACKED STARTUPS & MID MARKET ORGANIZATIONS WORLDWIDE
-      </p>
-      <div className="trusted-by-marquee">
-        <motion.div 
-          className="trusted-by-track"
-          animate={{ x: ['0%', '-33.333%'] }}
-          transition={{ 
-            duration: 25, 
-            repeat: Infinity, 
-            ease: 'linear',
-            repeatType: 'loop'
-          }}
-        >
-          {allCompanies.map((company, i) => (
-            <span key={i} className="trusted-by-logo">
-              {company}
-              <span className="logo-dot">◆</span>
-            </span>
-          ))}
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
 // Official Partners Section
 const OfficialPartnersSection = () => {
   const ref = useRef(null);
@@ -179,33 +305,35 @@ const OfficialPartnersSection = () => {
     { name: 'Instantly', logo: '/instantly.png' },
   ];
 
-  // Container animation variants
+  // Container animation variants with stagger
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.08,
-        delayChildren: 0.1,
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
       },
     },
   };
 
-  // Individual card animation variants - smooth entrance
+  // Individual card animation variants - scale + rotate effect
   const cardVariants = {
     hidden: { 
       opacity: 0, 
-      y: 20,
-      scale: 0.9,
+      y: 30,
+      scale: 0.8,
+      rotate: -3,
     },
     visible: { 
       opacity: 1, 
       y: 0,
       scale: 1,
+      rotate: 0,
       transition: {
         type: 'spring',
-        stiffness: 120,
-        damping: 14,
+        stiffness: 100,
+        damping: 12,
       },
     },
   };
@@ -214,15 +342,15 @@ const OfficialPartnersSection = () => {
     <motion.section
       ref={ref}
       className="official-partners-section"
-      initial={{ opacity: 0 }}
-      animate={isInView ? { opacity: 1 } : {}}
-      transition={{ duration: 0.6 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
     >
       <motion.h2 
         className="partners-title"
-        initial={{ opacity: 0, y: 20 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        initial={{ opacity: 0, y: 25, scale: 0.95 }}
+        animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+        transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
       >
         Official Partners
       </motion.h2>
@@ -232,25 +360,31 @@ const OfficialPartnersSection = () => {
         initial="hidden"
         animate={isInView ? 'visible' : 'hidden'}
       >
-        {partners.map((partner) => (
+        {partners.map((partner, index) => (
           <motion.div
             key={partner.name}
             className="partner-card"
             variants={cardVariants}
             whileHover={{ 
-              y: -8, 
-              scale: 1.05,
-              transition: { type: 'spring', stiffness: 400, damping: 20 }
+              y: -12, 
+              scale: 1.08,
+              rotate: 2,
+              transition: { type: 'spring', stiffness: 400, damping: 15 }
             }}
-            whileTap={{ scale: 0.95 }}
+            whileTap={{ scale: 0.92 }}
+            style={{ transformStyle: 'preserve-3d' }}
           >
-            <div className="partner-logo-wrapper">
+            <motion.div 
+              className="partner-logo-wrapper"
+              whileHover={{ rotateY: 5, rotateX: -5 }}
+              transition={{ type: 'spring', stiffness: 300 }}
+            >
               <img 
                 src={partner.logo} 
                 alt={partner.name} 
                 className={`partner-logo ${partner.name === 'Make' ? 'partner-logo-make' : ''}`}
               />
-            </div>
+            </motion.div>
           </motion.div>
         ))}
       </motion.div>
@@ -263,20 +397,40 @@ const WhoWeAreSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
+  // Content slides in from left
+  const contentVariants = {
+    hidden: { opacity: 0, x: -60 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.2 },
+      x: 0,
+      transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
     },
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 60 },
+  // Stats container with stagger
+  const statsContainerVariants = {
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      y: 0,
-      transition: { duration: 1, ease: [0.16, 1, 0.3, 1] },
+      transition: { 
+        staggerChildren: 0.2,
+        delayChildren: 0.3
+      },
+    },
+  };
+
+  // Individual stat card animations
+  const statCardVariants = {
+    hidden: { opacity: 0, x: 40, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      scale: 1,
+      transition: { 
+        type: 'spring',
+        stiffness: 100,
+        damping: 15
+      },
     },
   };
 
@@ -284,27 +438,51 @@ const WhoWeAreSection = () => {
     <motion.section
       ref={ref}
       className="section who-we-are"
-      variants={containerVariants}
-      initial="hidden"
-      animate={isInView ? 'visible' : 'hidden'}
+      initial={{ opacity: 0 }}
+      animate={isInView ? { opacity: 1 } : {}}
+      transition={{ duration: 0.6 }}
     >
       <div className="who-we-are-grid">
-        <motion.div className="who-we-are-content" variants={itemVariants}>
-          <h2 className="section-title">
+        <motion.div 
+          className="who-we-are-content" 
+          variants={contentVariants}
+          initial="hidden"
+          animate={isInView ? 'visible' : 'hidden'}
+        >
+          <motion.h2 
+            className="section-title"
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          >
             Who <span className="italic">We</span> Are
-          </h2>
-          <p className="who-we-are-description">
+          </motion.h2>
+          <motion.p 
+            className="who-we-are-description"
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          >
             Rillation Revenue is an <span className="highlight-blue">AI-first lead generation</span> company that combines{' '}
             <span className="highlight-blue">software, automation, and AI</span> to deliver booked meetings cheaper and more
             reliably than hiring a sales team.
-          </p>
+          </motion.p>
         </motion.div>
         
-        <motion.div className="stats-stack" variants={itemVariants}>
+        <motion.div 
+          className="stats-stack" 
+          variants={statsContainerVariants}
+          initial="hidden"
+          animate={isInView ? 'visible' : 'hidden'}
+        >
           <motion.div 
             className="stat-card"
-            whileHover={{ x: 8 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            variants={statCardVariants}
+            whileHover={{ 
+              x: 12, 
+              scale: 1.02,
+              transition: { type: 'spring', stiffness: 400, damping: 20 }
+            }}
           >
             <div className="stat-value">
               <AnimatedCounter value={2.8} suffix="M" />
@@ -314,8 +492,12 @@ const WhoWeAreSection = () => {
           
           <motion.div 
             className="stat-card"
-            whileHover={{ x: 8 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            variants={statCardVariants}
+            whileHover={{ 
+              x: 12, 
+              scale: 1.02,
+              transition: { type: 'spring', stiffness: 400, damping: 20 }
+            }}
           >
             <div className="stat-value">
               <AnimatedCounter value={1200} suffix="+" />
@@ -337,7 +519,7 @@ const MoreThanVendorSection = () => {
     {
       number: '01',
       title: 'An Extension of You',
-      description: 'We operate as an add-on to your current operation—almost like another arm of your business.',
+      description: 'We operate as an add-on to your current operation - almost like another arm of your business.',
     },
     {
       number: '02',
@@ -351,20 +533,46 @@ const MoreThanVendorSection = () => {
     },
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
+  // Header slides in from right
+  const headerVariants = {
+    hidden: { opacity: 0, x: 40 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.15 },
+      x: 0,
+      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
     },
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 60 },
+  // Bento grid container with stagger
+  const gridContainerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { 
+        staggerChildren: 0.15,
+        delayChildren: 0.2
+      },
+    },
+  };
+
+  // Bento card with scale + 3D effect
+  const bentoCardVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 50,
+      scale: 0.9,
+      rotateX: 10
+    },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 1, ease: [0.16, 1, 0.3, 1] },
+      scale: 1,
+      rotateX: 0,
+      transition: { 
+        type: 'spring',
+        stiffness: 100,
+        damping: 15
+      },
     },
   };
 
@@ -372,31 +580,72 @@ const MoreThanVendorSection = () => {
     <motion.section
       ref={ref}
       className="section more-than-vendor"
-      variants={containerVariants}
-      initial="hidden"
-      animate={isInView ? 'visible' : 'hidden'}
+      initial={{ opacity: 0 }}
+      animate={isInView ? { opacity: 1 } : {}}
+      transition={{ duration: 0.6 }}
+      style={{ perspective: '1000px' }}
     >
-      <motion.div className="section-header" variants={itemVariants}>
-        <span className="section-eyebrow section-eyebrow-partnership">Partnership</span>
-        <h2 className="section-title">
+      <motion.div 
+        className="section-header" 
+        variants={headerVariants}
+        initial="hidden"
+        animate={isInView ? 'visible' : 'hidden'}
+      >
+        <motion.span 
+          className="section-eyebrow section-eyebrow-partnership"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          Partnership
+        </motion.span>
+        <motion.h2 
+          className="section-title"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        >
           More Than A <span className="italic">Vendor</span>
-        </h2>
-        <p className="section-subtitle">
+        </motion.h2>
+        <motion.p 
+          className="section-subtitle"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        >
           We don't just send emails. We embed ourselves into your organization as a
           dedicated growth engine.
-        </p>
+        </motion.p>
       </motion.div>
       
-      <motion.div className="bento-grid" variants={containerVariants}>
+      <motion.div 
+        className="bento-grid" 
+        variants={gridContainerVariants}
+        initial="hidden"
+        animate={isInView ? 'visible' : 'hidden'}
+      >
         {cards.map((card, index) => (
           <motion.div
             key={index}
             className="bento-card"
-            variants={itemVariants}
-            whileHover={{ y: -8 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            variants={bentoCardVariants}
+            whileHover={{ 
+              y: -12, 
+              scale: 1.03,
+              rotateY: 3,
+              rotateX: -3,
+              transition: { type: 'spring', stiffness: 400, damping: 20 }
+            }}
+            style={{ transformStyle: 'preserve-3d' }}
           >
-            <div className="bento-number">{card.number}</div>
+            <motion.div 
+              className="bento-number"
+              initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
+              animate={isInView ? { opacity: 1, scale: 1, rotate: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.4 + index * 0.1, type: 'spring' }}
+            >
+              {card.number}
+            </motion.div>
             <h3>{card.title}</h3>
             <p>{card.description}</p>
           </motion.div>
@@ -432,20 +681,53 @@ const WhyHappeningSection = () => {
     },
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
+  // Left side slides in from left
+  const leftSideVariants = {
+    hidden: { opacity: 0, x: -50 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.15 },
+      x: 0,
+      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
     },
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 40 },
+  // Reason items with stagger
+  const reasonsContainerVariants = {
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+      transition: { 
+        staggerChildren: 0.12,
+        delayChildren: 0.3
+      },
+    },
+  };
+
+  // Individual reason items slide in from left
+  const reasonItemVariants = {
+    hidden: { opacity: 0, x: -30 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { 
+        type: 'spring',
+        stiffness: 100,
+        damping: 15
+      },
+    },
+  };
+
+  // Number bounce in
+  const numberVariants = {
+    hidden: { opacity: 0, scale: 0.5 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: { 
+        type: 'spring',
+        stiffness: 300,
+        damping: 15
+      },
     },
   };
 
@@ -453,29 +735,58 @@ const WhyHappeningSection = () => {
     <motion.section
       ref={ref}
       className="section why-happening"
-      variants={containerVariants}
-      initial="hidden"
-      animate={isInView ? 'visible' : 'hidden'}
+      initial={{ opacity: 0 }}
+      animate={isInView ? { opacity: 1 } : {}}
+      transition={{ duration: 0.6 }}
     >
       <div className="why-happening-wrapper">
-        <motion.div className="why-happening-left" variants={itemVariants}>
-          <span className="section-eyebrow">The Challenge</span>
-          <h2 className="section-title">
+        <motion.div 
+          className="why-happening-left" 
+          variants={leftSideVariants}
+          initial="hidden"
+          animate={isInView ? 'visible' : 'hidden'}
+        >
+          <motion.span 
+            className="section-eyebrow"
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            The Challenge
+          </motion.span>
+          <motion.h2 
+            className="section-title"
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          >
             Why is this happening <span className="highlight">right now?</span>
-          </h2>
+          </motion.h2>
           
-          <div className="reasons-list">
+          <motion.div 
+            className="reasons-list"
+            variants={reasonsContainerVariants}
+            initial="hidden"
+            animate={isInView ? 'visible' : 'hidden'}
+          >
             {reasons.map((reason, index) => (
               <motion.div
                 key={index}
                 className="reason-item"
-                variants={itemVariants}
-                whileHover={{ x: 8 }}
-                transition={{ type: 'spring', stiffness: 300 }}
+                variants={reasonItemVariants}
+                whileHover={{ 
+                  x: 12,
+                  transition: { type: 'spring', stiffness: 400, damping: 20 }
+                }}
               >
                 <motion.div 
                   className="reason-number"
-                  whileHover={{ scale: 1.1 }}
+                  variants={numberVariants}
+                  whileHover={{ 
+                    scale: 1.15,
+                    rotate: 5,
+                    transition: { type: 'spring', stiffness: 400 }
+                  }}
                 >
                   {reason.number}
                 </motion.div>
@@ -485,24 +796,30 @@ const WhyHappeningSection = () => {
                 </div>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </motion.div>
         
         <motion.div 
           className="why-happening-right"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={isInView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+          initial={{ opacity: 0, x: 60, scale: 0.9 }}
+          animate={isInView ? { opacity: 1, x: 0, scale: 1 } : {}}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
         >
-          <div className="callout-box">
+          <motion.div 
+            className="callout-box"
+            whileHover={{ 
+              scale: 1.02,
+              transition: { type: 'spring', stiffness: 300 }
+            }}
+          >
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 25 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 1, delay: 0.6 }}
+              transition={{ duration: 0.8, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
             >
               Only the relevant survive.
             </motion.p>
-          </div>
+          </motion.div>
         </motion.div>
       </div>
     </motion.section>
@@ -548,20 +865,54 @@ const OldWayBrokenSection = () => {
     },
   ];
 
-  const containerVariants = {
+  // Pain cards container with stagger
+  const painCardsContainerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.15 },
+      transition: { 
+        staggerChildren: 0.15,
+        delayChildren: 0.3
+      },
     },
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 60 },
+  // Pain card slide up with scale
+  const painCardVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 80,
+      scale: 0.9
+    },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 1, ease: [0.16, 1, 0.3, 1] },
+      scale: 1,
+      transition: { 
+        type: 'spring',
+        stiffness: 100,
+        damping: 15
+      },
+    },
+  };
+
+  // Icon animation with rotation
+  const iconVariants = {
+    hidden: { 
+      opacity: 0, 
+      scale: 0,
+      rotate: -180
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      rotate: 0,
+      transition: { 
+        type: 'spring',
+        stiffness: 200,
+        damping: 15,
+        delay: 0.2
+      },
     },
   };
 
@@ -569,27 +920,62 @@ const OldWayBrokenSection = () => {
     <motion.section
       ref={ref}
       className="section old-way-broken"
-      variants={containerVariants}
-      initial="hidden"
-      animate={isInView ? 'visible' : 'hidden'}
+      initial={{ opacity: 0 }}
+      animate={isInView ? { opacity: 1 } : {}}
+      transition={{ duration: 0.6 }}
     >
-      <motion.div className="section-header" variants={itemVariants}>
-        <span className="section-eyebrow">The Problem</span>
-        <h2 className="section-title">
+      <motion.div 
+        className="section-header"
+        initial={{ opacity: 0, y: 40 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <motion.span 
+          className="section-eyebrow"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          The Problem
+        </motion.span>
+        <motion.h2 
+          className="section-title"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        >
           The "Old Way" is <span className="highlight-red">Broken</span>
-        </h2>
+        </motion.h2>
       </motion.div>
       
-      <motion.div className="pain-cards" variants={containerVariants}>
+      <motion.div 
+        className="pain-cards" 
+        variants={painCardsContainerVariants}
+        initial="hidden"
+        animate={isInView ? 'visible' : 'hidden'}
+      >
         {painPoints.map((point, index) => (
           <motion.div
             key={index}
             className="pain-card"
-            variants={itemVariants}
-            whileHover={{ y: -8 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            variants={painCardVariants}
+            whileHover={{ 
+              y: -12, 
+              scale: 1.03,
+              transition: { type: 'spring', stiffness: 400, damping: 20 }
+            }}
           >
-            <div className="pain-icon">{point.icon}</div>
+            <motion.div 
+              className="pain-icon"
+              variants={iconVariants}
+              whileHover={{ 
+                rotate: 10, 
+                scale: 1.2,
+                transition: { type: 'spring', stiffness: 400 }
+              }}
+            >
+              {point.icon}
+            </motion.div>
             <h3>{point.title}</h3>
             <p>{point.description}</p>
           </motion.div>
@@ -608,7 +994,7 @@ const FutureStateSection = () => {
     {
       icon: '📈',
       title: 'Predictable Pipeline',
-      description: 'Qualified opportunities flowing in every single month—not hoping for referrals.',
+      description: 'Qualified opportunities flowing in every single month - not hoping for referrals.',
     },
     {
       icon: '🎯',
@@ -618,7 +1004,7 @@ const FutureStateSection = () => {
     {
       icon: '🔄',
       title: 'Compounding GTM Motion',
-      description: 'Data, learning, and assets that build on each other—no quarterly resets.',
+      description: 'Data, learning, and assets that build on each other - no quarterly resets.',
     },
     {
       icon: '📊',
@@ -627,20 +1013,51 @@ const FutureStateSection = () => {
     },
   ];
 
-  const containerVariants = {
+  // Outcomes grid with stagger cascade
+  const outcomeGridVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.12 },
+      transition: { 
+        staggerChildren: 0.1,
+        delayChildren: 0.3
+      },
     },
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 60 },
+  // Outcome card with scale + bounce
+  const outcomeCardVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 50,
+      scale: 0.85
+    },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 1, ease: [0.16, 1, 0.3, 1] },
+      scale: 1,
+      transition: { 
+        type: 'spring',
+        stiffness: 150,
+        damping: 15
+      },
+    },
+  };
+
+  // Icon bounce in
+  const iconBounceVariants = {
+    hidden: { 
+      opacity: 0, 
+      scale: 0.3
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: { 
+        type: 'spring',
+        stiffness: 400,
+        damping: 15
+      },
     },
   };
 
@@ -648,33 +1065,71 @@ const FutureStateSection = () => {
     <motion.section
       ref={ref}
       className="section future-state"
-      variants={containerVariants}
-      initial="hidden"
-      animate={isInView ? 'visible' : 'hidden'}
+      initial={{ opacity: 0 }}
+      animate={isInView ? { opacity: 1 } : {}}
+      transition={{ duration: 0.6 }}
     >
-      <motion.div className="section-header" variants={itemVariants}>
-        <motion.div className="future-badge" variants={itemVariants}>
+      <motion.div 
+        className="section-header"
+        initial={{ opacity: 0, y: 40 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <motion.div 
+          className="future-badge"
+          initial={{ opacity: 0, scale: 0.8, y: 20 }}
+          animate={isInView ? { opacity: 1, scale: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.1, type: 'spring', stiffness: 200 }}
+        >
           The Way Out
         </motion.div>
-        <h2 className="section-title">
+        <motion.h2 
+          className="section-title"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        >
           What <span className="highlight">Winners</span> Look Like
-        </h2>
-        <p className="section-subtitle">
+        </motion.h2>
+        <motion.p 
+          className="section-subtitle"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        >
           This is what the top 5–10% of operators have figured out.
           This is where you're headed.
-        </p>
+        </motion.p>
       </motion.div>
       
-      <motion.div className="outcomes-grid" variants={containerVariants}>
+      <motion.div 
+        className="outcomes-grid" 
+        variants={outcomeGridVariants}
+        initial="hidden"
+        animate={isInView ? 'visible' : 'hidden'}
+      >
         {outcomes.map((outcome, index) => (
           <motion.div
             key={index}
             className="outcome-card"
-            variants={itemVariants}
-            whileHover={{ y: -4 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            variants={outcomeCardVariants}
+            whileHover={{ 
+              y: -8, 
+              scale: 1.03,
+              transition: { type: 'spring', stiffness: 400, damping: 20 }
+            }}
           >
-            <div className="outcome-icon">{outcome.icon}</div>
+            <motion.div 
+              className="outcome-icon"
+              variants={iconBounceVariants}
+              whileHover={{ 
+                scale: 1.2,
+                rotate: 10,
+                transition: { type: 'spring', stiffness: 400 }
+              }}
+            >
+              {outcome.icon}
+            </motion.div>
             <div className="outcome-content">
               <h3>{outcome.title}</h3>
               <p>{outcome.description}</p>
@@ -700,7 +1155,7 @@ const HowWinnersSection = () => {
     {
       number: '02',
       title: 'Right People & Messaging',
-      description: 'Persona-specific, outcome-focused copy. Every message speaks to what they actually care about—not generic pitches.',
+      description: 'Persona-specific, outcome-focused copy. Every message speaks to what they actually care about - not generic pitches.',
     },
     {
       number: '03',
@@ -709,20 +1164,51 @@ const HowWinnersSection = () => {
     },
   ];
 
-  const containerVariants = {
+  // Pillars timeline container with stagger
+  const pillarsContainerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.2 },
+      transition: { 
+        staggerChildren: 0.25,
+        delayChildren: 0.3
+      },
     },
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 60 },
+  // Pillar card slides in from left
+  const pillarCardVariants = {
+    hidden: { 
+      opacity: 0, 
+      x: -60
+    },
     visible: {
       opacity: 1,
-      y: 0,
-      transition: { duration: 1, ease: [0.16, 1, 0.3, 1] },
+      x: 0,
+      transition: { 
+        type: 'spring',
+        stiffness: 100,
+        damping: 15
+      },
+    },
+  };
+
+  // Number with scale + rotation animation
+  const numberVariants = {
+    hidden: { 
+      opacity: 0, 
+      scale: 0.5,
+      rotate: -20
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      rotate: 0,
+      transition: { 
+        type: 'spring',
+        stiffness: 200,
+        damping: 15
+      },
     },
   };
 
@@ -730,40 +1216,80 @@ const HowWinnersSection = () => {
     <motion.section
       ref={ref}
       className="section how-winners"
-      variants={containerVariants}
-      initial="hidden"
-      animate={isInView ? 'visible' : 'hidden'}
+      initial={{ opacity: 0 }}
+      animate={isInView ? { opacity: 1 } : {}}
+      transition={{ duration: 0.6 }}
     >
-      <motion.div className="section-header" variants={itemVariants}>
-        <span className="section-eyebrow">The Framework</span>
-        <h2 className="section-title">
+      <motion.div 
+        className="section-header"
+        initial={{ opacity: 0, y: 40 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <motion.span 
+          className="section-eyebrow"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          The Framework
+        </motion.span>
+        <motion.h2 
+          className="section-title"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        >
           How Winners <span className="highlight">Get There</span>
-        </h2>
-        <p className="section-subtitle">
+        </motion.h2>
+        <motion.p 
+          className="section-subtitle"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        >
           Whenever we see clients cross 50+ SQLs/month predictably, these 3 things are in place.
-        </p>
+        </motion.p>
       </motion.div>
       
-      <motion.div className="pillars-timeline" variants={containerVariants}>
+      <motion.div 
+        className="pillars-timeline" 
+        variants={pillarsContainerVariants}
+        initial="hidden"
+        animate={isInView ? 'visible' : 'hidden'}
+      >
         {pillars.map((pillar, index) => (
           <motion.div
             key={index}
             className="pillar-card"
-            variants={itemVariants}
+            variants={pillarCardVariants}
+            whileHover={{ 
+              x: 10,
+              transition: { type: 'spring', stiffness: 400, damping: 20 }
+            }}
           >
             <div className="pillar-number-wrapper">
               <motion.div 
                 className="pillar-number"
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: 'spring', stiffness: 300 }}
+                variants={numberVariants}
+                whileHover={{ 
+                  scale: 1.1,
+                  rotate: 5,
+                  transition: { type: 'spring', stiffness: 400 }
+                }}
               >
                 {pillar.number}
               </motion.div>
             </div>
-            <div className="pillar-content">
+            <motion.div 
+              className="pillar-content"
+              initial={{ opacity: 0, x: 20 }}
+              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.4 + index * 0.15 }}
+            >
               <h3>{pillar.title}</h3>
               <p>{pillar.description}</p>
-            </div>
+            </motion.div>
           </motion.div>
         ))}
       </motion.div>
@@ -771,79 +1297,161 @@ const HowWinnersSection = () => {
   );
 };
 
-// Calendly Embed Section
-const CalendlySection = () => {
+// Realm Door Section - Inspired by abstract illustration
+const RealmDoorSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
-
-  useEffect(() => {
-    // Load Calendly widget when component mounts
-    const script = document.createElement('script');
-    script.src = 'https://assets.calendly.com/assets/external/widget.js';
-    script.async = true;
-    document.body.appendChild(script);
-    
-    return () => {
-      // Cleanup if needed
-    };
-  }, []);
 
   return (
     <motion.section
       ref={ref}
       id="calendly"
-      className="calendly-section"
+      className="realm-door-section"
       initial={{ opacity: 0 }}
       animate={isInView ? { opacity: 1 } : {}}
-      transition={{ duration: 1 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
     >
-      <div className="calendly-content">
+      <div className="realm-door-content">
+        {/* Abstract Illustration */}
         <motion.div 
-          className="calendly-text"
-          initial={{ opacity: 0, x: -40 }}
-          animate={isInView ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="realm-illustration"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={isInView ? { opacity: 1, scale: 1 } : {}}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
         >
-          <span className="calendly-eyebrow">Pilot Program</span>
-          <h2>
-            Ready to <span className="italic">scale?</span>
-          </h2>
-          <p className="calendly-subtitle">
-            Book a call to see if you're a fit for our pilot program. Limited spots available.
-          </p>
-          <div className="calendly-features">
-            <div className="calendly-feature">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polyline points="20 6 9 17 4 12"/>
-              </svg>
-              <span>15-minute intro call</span>
-            </div>
-            <div className="calendly-feature">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polyline points="20 6 9 17 4 12"/>
-              </svg>
-              <span>No commitment required</span>
-            </div>
-            <div className="calendly-feature">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polyline points="20 6 9 17 4 12"/>
-              </svg>
-              <span>Learn if we're a fit</span>
-            </div>
-          </div>
+          <svg 
+            viewBox="0 0 1200 600" 
+            className="realm-svg"
+            preserveAspectRatio="xMidYMid meet"
+          >
+            <defs>
+              {/* Sky gradient */}
+              <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#4A90E2" stopOpacity="0.8" />
+                <stop offset="50%" stopColor="#FF6B9D" stopOpacity="0.6" />
+                <stop offset="100%" stopColor="#FF8C42" stopOpacity="0.7" />
+              </linearGradient>
+              
+              {/* Ground gradient */}
+              <linearGradient id="groundGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#2E5C8A" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#C94A6B" stopOpacity="0.6" />
+              </linearGradient>
+              
+              {/* Doorway glow */}
+              <radialGradient id="doorGlow" cx="50%" cy="50%">
+                <stop offset="0%" stopColor="#FFF9E6" stopOpacity="1" />
+                <stop offset="50%" stopColor="#FFE5B4" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#FFB347" stopOpacity="0.3" />
+              </radialGradient>
+              
+              {/* Pillar gradient */}
+              <linearGradient id="pillarGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#4A90E2" stopOpacity="0.6" />
+                <stop offset="50%" stopColor="#2E5C8A" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#C94A6B" stopOpacity="0.5" />
+              </linearGradient>
+            </defs>
+            
+            {/* Sky background */}
+            <rect width="1200" height="400" fill="url(#skyGradient)" />
+            
+            {/* Ground */}
+            <rect y="400" width="1200" height="200" fill="url(#groundGradient)" />
+            
+            {/* Pillars - receding into distance */}
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map((i) => {
+              const x = 100 + i * 70;
+              const width = 40 - i * 1.5;
+              const height = 300 + i * 20;
+              const y = 400 - height;
+              const opacity = 0.3 + (i / 15) * 0.4;
+              
+              return (
+                <rect
+                  key={i}
+                  x={x}
+                  y={y}
+                  width={width}
+                  height={height}
+                  fill="url(#pillarGradient)"
+                  opacity={opacity}
+                />
+              );
+            })}
+            
+            {/* Glowing doorway */}
+            <rect
+              x="550"
+              y="200"
+              width="100"
+              height="250"
+              fill="url(#doorGlow)"
+              opacity="0.9"
+            />
+            <rect
+              x="560"
+              y="210"
+              width="80"
+              height="230"
+              fill="#FFE5B4"
+              opacity="0.6"
+            />
+            
+            {/* Silhouetted figure */}
+            <motion.path
+              d="M 580 450 L 600 380 L 620 450 Z"
+              fill="#222624"
+              opacity="0.8"
+              initial={{ y: 0 }}
+              animate={isInView ? { y: [0, -5, 0] } : {}}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <ellipse
+              cx="600"
+              cy="370"
+              rx="15"
+              ry="20"
+              fill="#222624"
+              opacity="0.8"
+            />
+          </svg>
         </motion.div>
         
+        {/* Text and Grid Overlay */}
         <motion.div 
-          className="calendly-embed-wrapper"
-          initial={{ opacity: 0, x: 40 }}
-          animate={isInView ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="realm-overlay"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div 
-            className="calendly-inline-widget" 
-            data-url="https://calendly.com/ziad_khateeb/rillation-intro-call?hide_gdpr_banner=1&background_color=1a1a2e&text_color=ffffff&primary_color=0c24e9"
-            style={{ minWidth: '320px', height: '700px', width: '100%' }}
-          />
+          {/* Text */}
+          <motion.h2 
+            className="realm-text"
+            initial={{ opacity: 0, x: -20 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          >
+            Enter the door of realm and<br />
+            build anything you imagine.
+          </motion.h2>
+          
+          {/* Grid Pattern */}
+          <motion.div 
+            className="realm-grid"
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ duration: 1, delay: 0.8 }}
+          >
+            <svg width="400" height="300" className="grid-svg">
+              <defs>
+                <pattern id="gridPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <circle cx="10" cy="10" r="1.5" fill="#222624" opacity="0.3" />
+                </pattern>
+              </defs>
+              <rect width="400" height="300" fill="url(#gridPattern)" />
+            </svg>
+          </motion.div>
         </motion.div>
       </div>
     </motion.section>
@@ -852,10 +1460,25 @@ const CalendlySection = () => {
 
 // Footer
 const Footer = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-20px' });
+
   return (
-    <footer className="footer">
-      <p>© {new Date().getFullYear()} Rillation Revenue. All rights reserved.</p>
-    </footer>
+    <motion.footer 
+      ref={ref}
+      className="footer"
+      initial={{ opacity: 0, y: 20 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={isInView ? { opacity: 1 } : {}}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
+        © {new Date().getFullYear()} Rillation Revenue. All rights reserved.
+      </motion.p>
+    </motion.footer>
   );
 };
 
@@ -945,7 +1568,7 @@ function App() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
           >
-            We build and manage <strong>AI-Driven Outbound Systems</strong> that deliver ready-to-close sales opportunities every single week.
+            AI-Driven Outbound Systems that deliver ready-to-close sales opportunities every single week.
           </motion.p>
 
           <motion.div
@@ -965,35 +1588,32 @@ function App() {
           </motion.div>
         </section>
 
-        {/* Trusted By Section */}
-        <TrustedBySection />
-        
         {/* Official Partners - Visible on page load */}
         <OfficialPartnersSection />
       </div>
 
-      {/* Content Sections */}
-      <div className="section-wrapper">
+      {/* Content Sections with Parallax */}
+      <ParallaxSection offset={30}>
         <WhoWeAreSection />
-      </div>
-      <div className="section-wrapper">
+      </ParallaxSection>
+      <ParallaxSection offset={25}>
         <MoreThanVendorSection />
-      </div>
-      <div className="section-wrapper">
+      </ParallaxSection>
+      <ParallaxSection offset={35}>
         <WhyHappeningSection />
-      </div>
-      <div className="section-wrapper">
+      </ParallaxSection>
+      <ParallaxSection offset={30}>
         <OldWayBrokenSection />
-      </div>
-      <div className="section-wrapper">
+      </ParallaxSection>
+      <ParallaxSection offset={25}>
         <FutureStateSection />
-      </div>
-      <div className="section-wrapper">
+      </ParallaxSection>
+      <ParallaxSection offset={30}>
         <HowWinnersSection />
-      </div>
-      <div className="section-wrapper">
-        <CalendlySection />
-      </div>
+      </ParallaxSection>
+      <ParallaxSection offset={20}>
+        <RealmDoorSection />
+      </ParallaxSection>
       <Footer />
     </>
   );
