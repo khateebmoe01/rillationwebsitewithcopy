@@ -16,6 +16,7 @@
 /* Logo container refinements */
 .logo-container {
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
 }
 
 .logo-container:hover {
@@ -23,10 +24,8 @@
 }
 
 .logo-container img {
-  min-width: clamp(100px, 12vw, 140px);
-  max-width: clamp(120px, 14vw, 160px);
-  height: auto;
-  filter: brightness(0) saturate(100%) invert(15%) sepia(95%) saturate(5000%) hue-rotate(230deg) brightness(0.9) contrast(1.2);
+  height: 40px;
+  width: auto;
 }
 
 /* Hero title special effects */
@@ -192,10 +191,7 @@
   animation: gradientShift 4s ease infinite;
 }
 
-/* Section divider lines - now handled by border-top on sections */
-.section::before {
-  display: none;
-}
+/* Section divider lines - rendered via index.css */
 
 /* Calendly section gradient overlay */
 .calendly-section::after {

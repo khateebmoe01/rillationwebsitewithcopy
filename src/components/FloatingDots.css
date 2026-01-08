@@ -1,8 +1,9 @@
+/* Floating Dots Container - Futuristic CIA Vibes */
 .floating-dots-container {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 300px;
+  width: 280px;
   pointer-events: none;
   z-index: 1;
   overflow: hidden;
@@ -10,59 +11,123 @@
 
 .floating-dots-left {
   left: 0;
-  mask-image: linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 60%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 60%, transparent 100%);
+  mask-image: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
 }
 
 .floating-dots-right {
   right: 0;
-  mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 60%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 60%, transparent 100%);
+  mask-image: linear-gradient(to left, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
 }
 
+/* Individual dots */
 .floating-dot {
   position: absolute;
   left: var(--x);
   top: var(--y);
   width: var(--size);
   height: var(--size);
-  background-color: #2D7A5E; /* Teal/Green - matches reference */
+  background: #0C24E9;
   border-radius: 50%;
   opacity: var(--opacity);
-  animation: floatUp var(--duration) linear infinite;
-  animation-delay: calc(var(--delay) * -1); /* Negative delay starts animation mid-way */
+  box-shadow: 
+    0 0 8px rgba(12, 36, 233, 0.4),
+    0 0 16px rgba(12, 36, 233, 0.2);
+  will-change: transform;
+}
+
+/* Upward floating animation */
+.floating-dot-up {
+  animation: floatUp var(--duration) ease-in-out infinite;
+  animation-delay: calc(var(--delay) * -1);
+}
+
+/* Downward floating animation */
+.floating-dot-down {
+  animation: floatDown var(--duration) ease-in-out infinite;
+  animation-delay: calc(var(--delay) * -1);
 }
 
 @keyframes floatUp {
   0% {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
     opacity: var(--opacity);
   }
+  25% {
+    opacity: calc(var(--opacity) * 1.3);
+  }
   50% {
-    opacity: calc(var(--opacity) * 1.2);
+    transform: translateY(-80vh) scale(0.9);
+    opacity: var(--opacity);
+  }
+  75% {
+    opacity: calc(var(--opacity) * 0.7);
   }
   100% {
-    transform: translateY(-120vh);
-    opacity: 0;
+    transform: translateY(0) scale(1);
+    opacity: var(--opacity);
   }
 }
 
+@keyframes floatDown {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: var(--opacity);
+  }
+  25% {
+    opacity: calc(var(--opacity) * 0.7);
+  }
+  50% {
+    transform: translateY(80vh) scale(0.9);
+    opacity: var(--opacity);
+  }
+  75% {
+    opacity: calc(var(--opacity) * 1.3);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: var(--opacity);
+  }
+}
+
+/* Subtle grid overlay for tech/surveillance aesthetic */
+.floating-dots-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(12, 36, 233, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(12, 36, 233, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.5;
+}
+
 /* Responsive adjustments */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .floating-dots-container {
     width: 200px;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .floating-dots-container {
     width: 150px;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .floating-dots-container {
     width: 100px;
+  }
+  
+  .floating-dots-grid {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .floating-dots-container {
+    width: 60px;
   }
 }
 
@@ -70,5 +135,19 @@
 @media (prefers-reduced-motion: reduce) {
   .floating-dot {
     animation: none;
+  }
+  
+  .floating-dot-up,
+  .floating-dot-down {
+    animation: subtlePulse 4s ease-in-out infinite;
+  }
+}
+
+@keyframes subtlePulse {
+  0%, 100% {
+    opacity: var(--opacity);
+  }
+  50% {
+    opacity: calc(var(--opacity) * 1.2);
   }
 }
