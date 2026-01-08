@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Font face declarations for custom fonts */
 @font-face {
   font-family: 'Cooper BT';
@@ -61,6 +65,28 @@
   /* Transitions */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+
+  /* Tailwind CSS Variables for Aceternity UI */
+  --background: 43 35 20;
+  --foreground: 34 38 36;
+  --card: 0 0 100%;
+  --card-foreground: 34 38 36;
+  --popover: 0 0 100%;
+  --popover-foreground: 34 38 36;
+  --primary: 223 82 92%;
+  --primary-foreground: 0 0 100%;
+  --secondary: 158 42 46%;
+  --secondary-foreground: 0 0 100%;
+  --muted: 43 35 20;
+  --muted-foreground: 34 38 36;
+  --accent: 223 82 92%;
+  --accent-foreground: 0 0 100%;
+  --destructive: 0 84 60%;
+  --destructive-foreground: 0 0 100%;
+  --border: 34 38 36;
+  --input: 34 38 36;
+  --ring: 223 82 92%;
+  --radius: 0.5rem;
 }
 
 * {
@@ -72,6 +98,7 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  background-color: #F5F2E8;
 }
 
 body {
@@ -268,12 +295,12 @@ body {
 
 .hero-title .italic {
   font-style: italic;
-  color: var(--color-primary);
+  color: var(--color-carbon);
 }
 
 .hero-subtitle {
   font-size: clamp(20px, 2.4vw, 28px);
-  color: var(--color-primary);
+  color: var(--color-carbon);
   max-width: min(700px, 90vw);
   margin-bottom: clamp(16px, 2.5vw, 28px);
   line-height: 1.5;
@@ -465,7 +492,7 @@ body {
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--color-text-subtle);
+  color: var(--color-carbon);
   margin-bottom: clamp(8px, 1vw, 12px);
   padding: 0 20px;
 }
@@ -490,7 +517,7 @@ body {
   font-family: var(--font-heading);
   font-size: clamp(14px, 1.5vw, 16px);
   font-weight: 600;
-  color: var(--color-text-muted);
+  color: var(--color-carbon);
   letter-spacing: 0.05em;
   white-space: nowrap;
   opacity: 0.7;
@@ -578,6 +605,53 @@ body {
   );
 }
 
+/* Vertical dividers on left and right */
+.section {
+  position: relative;
+}
+
+/* Left vertical divider */
+.section::after {
+  content: '';
+  position: absolute;
+  left: clamp(24px, 4vw, 64px);
+  top: clamp(48px, 6vw, 72px);
+  bottom: clamp(48px, 6vw, 72px);
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    var(--color-border) 10%,
+    var(--color-border) 90%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Right vertical divider - using wrapper approach */
+.section-wrapper {
+  position: relative;
+}
+
+.section-wrapper::after {
+  content: '';
+  position: absolute;
+  right: clamp(24px, 4vw, 64px);
+  top: clamp(48px, 6vw, 72px);
+  bottom: clamp(48px, 6vw, 72px);
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    var(--color-border) 10%,
+    var(--color-border) 90%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
 /* Section divider - clear visual separation */
 .section-divider {
   width: 100%;
@@ -592,13 +666,18 @@ body {
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--color-primary);
+  color: var(--color-carbon);
   margin-bottom: var(--space-lg);
   display: inline-flex;
   align-items: center;
   gap: 12px;
   position: relative;
   padding-left: 20px;
+}
+
+/* Keep Partnership eyebrow blue */
+.section-eyebrow-partnership {
+  color: var(--color-primary);
 }
 
 /* Decorative line before eyebrow */
@@ -610,6 +689,10 @@ body {
   transform: translateY(-50%);
   width: 12px;
   height: 2px;
+  background: var(--color-carbon);
+}
+
+.section-eyebrow-partnership::before {
   background: var(--color-primary);
 }
 
@@ -628,7 +711,7 @@ body {
 }
 
 .section-title .highlight {
-  color: var(--color-primary);
+  color: var(--color-carbon);
 }
 
 .section-title .highlight-red {
@@ -637,14 +720,14 @@ body {
 
 .section-description {
   font-size: clamp(18px, 2vw, 22px);
-  color: var(--color-primary);
+  color: var(--color-carbon);
   max-width: min(800px, 100%);
   line-height: 1.6;
 }
 
 .section-subtitle {
   font-size: clamp(21px, 2.4vw, 26px);
-  color: var(--color-primary);
+  color: var(--color-carbon);
   line-height: 1.6;
   margin-top: var(--space-sm);
   max-width: 700px;
@@ -673,13 +756,13 @@ body {
 
 .who-we-are-description {
   font-size: clamp(24px, 2.8vw, 32px);
-  color: var(--color-primary);
+  color: var(--color-carbon);
   line-height: 1.55;
   margin-top: 16px;
 }
 
 .who-we-are-description .highlight-blue {
-  color: var(--color-primary);
+  color: var(--color-carbon);
   font-weight: 500;
 }
 
@@ -728,14 +811,14 @@ body {
   line-height: 1;
   margin-bottom: 12px;
   letter-spacing: -0.02em;
-  color: var(--color-primary);
+  color: var(--color-carbon);
 }
 
 .stat-label {
   font-family: var(--font-body);
   font-size: clamp(13px, 1.3vw, 15px);
   font-weight: 500;
-  color: var(--color-primary);
+  color: var(--color-carbon);
   letter-spacing: 0.02em;
 }
 
@@ -772,7 +855,7 @@ body {
   font-family: var(--font-display);
   font-size: clamp(18px, 2vw, 24px);
   font-weight: 400;
-  color: var(--color-text-subtle);
+  color: var(--color-carbon);
   margin-bottom: clamp(16px, 2vw, 24px);
   letter-spacing: 0.02em;
 }
@@ -782,7 +865,7 @@ body {
   justify-content: center;
   align-items: center;
   gap: clamp(24px, 4vw, 48px);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   max-width: 1000px;
   margin: 0 auto;
 }
@@ -795,6 +878,18 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+}
+
+.partner-card:hover {
+  background: transparent !important;
+}
+
+.partner-logo-wrapper {
+  background: transparent !important;
+}
+
+.partner-card:hover .partner-logo-wrapper {
+  background: transparent !important;
 }
 
 .partner-logo-wrapper {
@@ -812,6 +907,18 @@ body {
   object-fit: contain;
   transition: all 0.4s var(--ease-out-expo);
   mix-blend-mode: multiply;
+}
+
+/* Remove background from Make logo - blend it with the page background */
+.partner-logo-make {
+  mix-blend-mode: multiply;
+  filter: contrast(1.3) brightness(1.2);
+  /* Multiply blend mode will blend light backgrounds together */
+}
+
+/* Ensure wrapper has no background */
+.partner-card:has(.partner-logo-make) .partner-logo-wrapper {
+  background: transparent !important;
 }
 
 .partner-card:hover .partner-logo {
@@ -878,14 +985,14 @@ body {
   font-family: var(--font-display);
   font-size: clamp(36px, 5vw, 52px);
   font-weight: 400;
-  color: var(--color-platinum);
+  color: var(--color-carbon);
   line-height: 1;
   margin-bottom: clamp(16px, 2vw, 20px);
   transition: color 0.4s var(--ease-out-expo);
 }
 
 .bento-card:hover .bento-number {
-  color: var(--color-primary);
+  color: var(--color-carbon);
 }
 
 .bento-card h3 {
@@ -899,7 +1006,7 @@ body {
 
 .bento-card p {
   font-size: clamp(18px, 2vw, 22px);
-  color: var(--color-primary);
+  color: var(--color-carbon);
   line-height: 1.55;
 }
 
@@ -975,7 +1082,9 @@ body {
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: clamp(13px, 1.4vw, 15px);
-  color: white;
+  color: var(--color-carbon);
+  background: transparent !important;
+  border: 2px solid var(--color-carbon);
   flex-shrink: 0;
   transition: transform 0.4s var(--ease-out-expo);
 }
@@ -994,7 +1103,7 @@ body {
 
 .reason-text p {
   font-size: clamp(18px, 2vw, 22px);
-  color: var(--color-primary);
+  color: var(--color-carbon);
   line-height: 1.5;
 }
 
@@ -1087,7 +1196,7 @@ body {
 
 .pain-card p {
   font-size: clamp(18px, 2vw, 22px);
-  color: var(--color-primary);
+  color: var(--color-carbon);
   line-height: 1.5;
 }
 
@@ -1117,7 +1226,7 @@ body {
   font-family: var(--font-body);
   font-size: clamp(11px, 1.1vw, 12px);
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--color-carbon);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   margin-bottom: 20px;
@@ -1166,7 +1275,7 @@ body {
 
 .outcome-content p {
   font-size: clamp(18px, 2vw, 22px);
-  color: var(--color-primary);
+  color: var(--color-carbon);
   line-height: 1.5;
 }
 
@@ -1225,7 +1334,7 @@ body {
   font-family: var(--font-display);
   font-size: clamp(28px, 4vw, 40px);
   font-weight: 400;
-  color: var(--color-primary);
+  color: var(--color-carbon);
   transition: all 0.5s var(--ease-out-expo);
 }
 
@@ -1246,12 +1355,12 @@ body {
   font-size: clamp(21px, 2.6vw, 28px);
   font-weight: 600;
   margin-bottom: 12px;
-  color: var(--color-primary);
+  color: var(--color-carbon);
 }
 
 .pillar-content p {
   font-size: clamp(18px, 2.2vw, 24px);
-  color: var(--color-primary);
+  color: var(--color-carbon);
   line-height: 1.55;
   max-width: min(550px, 100%);
 }
@@ -1304,7 +1413,7 @@ body {
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--color-primary);
+  color: var(--color-carbon);
   margin-bottom: var(--space-lg);
   position: relative;
   padding-left: 20px;

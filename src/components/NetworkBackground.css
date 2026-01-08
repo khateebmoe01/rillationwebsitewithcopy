@@ -1,0 +1,160 @@
+/* Network Background - Premium Animated Background */
+
+.network-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.network-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Connection lines */
+.network-connections {
+  will-change: opacity;
+}
+
+.network-line {
+  stroke-width: 1;
+  fill: none;
+  transition: opacity 0.3s ease;
+}
+
+.network-line-blue {
+  stroke: rgba(12, 36, 233, 1);
+}
+
+.network-line-green {
+  stroke: rgba(45, 122, 94, 1);
+}
+
+/* Nodes */
+.network-nodes {
+  will-change: transform, opacity;
+}
+
+.network-node {
+  transition: opacity 0.2s ease;
+}
+
+.network-node-blue {
+  fill: rgba(12, 36, 233, 0.8);
+}
+
+.network-node-green {
+  fill: rgba(45, 122, 94, 0.8);
+}
+
+/* Node glow effect */
+.network-node-glow {
+  transition: opacity 0.2s ease;
+}
+
+.network-node-glow-blue {
+  fill: rgba(12, 36, 233, 0.15);
+}
+
+.network-node-glow-green {
+  fill: rgba(45, 122, 94, 0.15);
+}
+
+/* Gradient overlay for depth */
+.network-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 100% 100% at 50% 0%,
+    transparent 0%,
+    rgba(245, 242, 232, 0.3) 70%,
+    rgba(245, 242, 232, 0.6) 100%
+  );
+  pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .network-background {
+    mask-image: radial-gradient(
+      ellipse 90% 80% at 50% 50%,
+      rgba(0, 0, 0, 0.8) 0%,
+      rgba(0, 0, 0, 0.4) 60%,
+      rgba(0, 0, 0, 0.1) 100%
+    );
+    -webkit-mask-image: radial-gradient(
+      ellipse 90% 80% at 50% 50%,
+      rgba(0, 0, 0, 0.8) 0%,
+      rgba(0, 0, 0, 0.4) 60%,
+      rgba(0, 0, 0, 0.1) 100%
+    );
+  }
+  
+  .network-line {
+    stroke-width: 0.75;
+  }
+}
+
+@media (max-width: 768px) {
+  .network-background {
+    opacity: 0.7;
+    mask-image: radial-gradient(
+      ellipse 100% 90% at 50% 50%,
+      rgba(0, 0, 0, 0.6) 0%,
+      rgba(0, 0, 0, 0.3) 50%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    -webkit-mask-image: radial-gradient(
+      ellipse 100% 90% at 50% 50%,
+      rgba(0, 0, 0, 0.6) 0%,
+      rgba(0, 0, 0, 0.3) 50%,
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
+  
+  .network-gradient-overlay {
+    background: radial-gradient(
+      ellipse 100% 100% at 50% 0%,
+      transparent 0%,
+      rgba(245, 242, 232, 0.5) 60%,
+      rgba(245, 242, 232, 0.8) 100%
+    );
+  }
+}
+
+@media (max-width: 480px) {
+  .network-background {
+    opacity: 0.5;
+  }
+  
+  .network-line {
+    stroke-width: 0.5;
+  }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .network-node,
+  .network-node-glow,
+  .network-line {
+    transition: none;
+  }
+  
+  .network-background {
+    opacity: 0.3;
+  }
+}
+
+/* Dark section override - for when background is dark */
+.calendly-section .network-background,
+[data-theme="dark"] .network-background {
+  display: none;
+}

@@ -2,6 +2,7 @@ import { motion, useInView, useMotionValue, useTransform, animate, useScroll, us
 import { useEffect, useState, useRef } from 'react';
 import Logo from './components/Logo';
 import FloatingDots from './components/FloatingDots';
+import NetworkBackground from './components/NetworkBackground';
 import './App.css';
 
 // Animated Counter with spring animation
@@ -230,7 +231,11 @@ const OfficialPartnersSection = () => {
             whileTap={{ scale: 0.95 }}
           >
             <div className="partner-logo-wrapper">
-              <img src={partner.logo} alt={partner.name} className="partner-logo" />
+              <img 
+                src={partner.logo} 
+                alt={partner.name} 
+                className={`partner-logo ${partner.name === 'Make' ? 'partner-logo-make' : ''}`}
+              />
             </div>
           </motion.div>
         ))}
@@ -271,7 +276,6 @@ const WhoWeAreSection = () => {
     >
       <div className="who-we-are-grid">
         <motion.div className="who-we-are-content" variants={itemVariants}>
-          <span className="section-eyebrow">About Us</span>
           <h2 className="section-title">
             Who <span className="italic">We</span> Are
           </h2>
@@ -359,7 +363,7 @@ const MoreThanVendorSection = () => {
       animate={isInView ? 'visible' : 'hidden'}
     >
       <motion.div className="section-header" variants={itemVariants}>
-        <span className="section-eyebrow">Partnership</span>
+        <span className="section-eyebrow section-eyebrow-partnership">Partnership</span>
         <h2 className="section-title">
           More Than A <span className="italic">Vendor</span>
         </h2>
@@ -396,13 +400,13 @@ const WhyHappeningSection = () => {
   const reasons = [
     {
       number: 1,
-      color: '#0C24E9',
+      color: '#EB1A1A',
       title: 'Inbox Saturation',
       description: 'Decision makers receive 100+ cold emails a day.',
     },
     {
       number: 2,
-      color: '#0C24E9',
+      color: '#EB1A1A',
       title: 'Tech Barriers',
       description: 'Email providers have tightened spam filters.',
     },
@@ -457,7 +461,6 @@ const WhyHappeningSection = () => {
               >
                 <motion.div 
                   className="reason-number"
-                  style={{ backgroundColor: reason.color }}
                   whileHover={{ scale: 1.1 }}
                 >
                   {reason.number}
@@ -848,6 +851,9 @@ function App() {
 
   return (
     <>
+      {/* Network Background Animation */}
+      <NetworkBackground />
+      
       {/* Progress bar */}
       <motion.div
         style={{
@@ -950,13 +956,27 @@ function App() {
       </div>
 
       {/* Content Sections */}
-      <WhoWeAreSection />
-      <MoreThanVendorSection />
-      <WhyHappeningSection />
-      <OldWayBrokenSection />
-      <FutureStateSection />
-      <HowWinnersSection />
-      <CalendlySection />
+      <div className="section-wrapper">
+        <WhoWeAreSection />
+      </div>
+      <div className="section-wrapper">
+        <MoreThanVendorSection />
+      </div>
+      <div className="section-wrapper">
+        <WhyHappeningSection />
+      </div>
+      <div className="section-wrapper">
+        <OldWayBrokenSection />
+      </div>
+      <div className="section-wrapper">
+        <FutureStateSection />
+      </div>
+      <div className="section-wrapper">
+        <HowWinnersSection />
+      </div>
+      <div className="section-wrapper">
+        <CalendlySection />
+      </div>
       <Footer />
     </>
   );

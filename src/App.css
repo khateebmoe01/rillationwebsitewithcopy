@@ -78,13 +78,13 @@
 /* Glow effect for primary elements */
 .highlight,
 .highlight-blue {
-  color: var(--color-primary);
+  color: var(--color-carbon);
   font-weight: 500;
 }
 
 /* Stat card number styling */
 .stat-value {
-  color: var(--color-primary);
+  color: var(--color-carbon);
 }
 
 /* Enhanced marquee styling */
